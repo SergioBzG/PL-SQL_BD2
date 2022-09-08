@@ -1,0 +1,103 @@
+CREATE TABLE Student(
+  studentId INTEGER PRIMARY KEY,
+  password VARCHAR(50) NOT NULL,
+  name VARCHAR(50) NOT NULL,
+  lastName VARCHAR(50) NOT NULL,
+  email VARCHAR(50) UNIQUE
+);
+
+CREATE TABLE Course (
+    courseId INTEGER PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    credits INTEGER NOT NULL
+);
+
+CREATE TABLE Typology (
+    typologyId INTEGER PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    requiredCredits INTEGER NOT NULL
+);
+
+CREATE TABLE inscription(
+    typologyId INTEGER NOT NULL,
+    courseId INTEGER NOT NULL,
+    inscriptionId INTEGER UNIQUE NOT NULL,
+    targetScore DECIMAL(2,1),
+    PRIMARY KEY (typologyId, courseId),
+    FOREIGN KEY (typologyId) REFERENCES Typology(typologyId),
+    FOREIGN KEY (courseId) REFERENCES Course(courseId)
+);
+
+declare
+    TYPE array_names IS TABLE OF VARCHAR(50) INDEX BY BINARY_INTEGER;
+    TYPE array_last_name IS TABLE OF VARCHAR(50) INDEX BY BINARY_INTEGER;
+    names array_names;
+    last_names array_last_name;
+begin
+    names(0) := 'Cassandra';
+    names(1) := 'Perséfone';
+    names(2) := 'Santiago';
+    names(3) := 'Valentín';
+    names(4) := 'Sergio';
+
+    last_names(0) := 'Posette';
+    last_names(1) := 'Osorio';
+    last_names(2) := 'Castro';
+    last_names(3) := 'Lara';
+    last_names(4) := 'Juno';
+
+    for i in names.first .. names.last loop
+        insert into student values(
+                              ceil(DBMS_RANDOM.value(1, 1500)),
+                              DBMS_RANDOM.string('x', 50),
+                              names(ceil(DBMS_RANDOM.value(0, 4))),
+                              last_names(ceil(DBMS_RANDOM.value(0, 4))) || ' ' || last_names(ceil(DBMS_RANDOM.value(0, 4))) ,
+                              null
+                              );
+    end loop;
+    commit work;
+end;
+
+
+declare
+    TYPE array_students IS TABLE OF INTEGER INDEX BY BINARY_INTEGER;
+    TYPE course_name IS TABLE OF VARCHAR(50) INDEX BY BINARY_INTEGER;
+    students_ids array_students;
+    courses_names course_name;
+begin
+    courses_names(1) := 'REDES Y TELECOMUNICACIONES I';
+    courses_names(2) := 'Seminario II';
+    courses_names(3) := 'BASE DE DATOS II';
+    courses_names(4) := 'Desarrollo web';
+    courses_names(5) := 'DINAMICA DE SISTEMAS';
+    courses_names(6) := 'Fundamentos de BI';
+    courses_names(7) := 'Fundamentos de proyectos en ingeniería';
+    courses_names(8) := 'INGENIERÍA DE REQUISITOS';
+    courses_names(9) := 'Introducción a la inteligencia artificial';
+    courses_names(10) := 'SISTEMAS OPERATIVOS';
+    courses_names(11) := 'Logica Simbolica';
+    courses_names(12) := 'Teoria del conocimiento';
+
+    SELECT studentId BULK COLLECT INTO students_ids
+    FROM student order by studentId;
+    FOR i IN 1 .. 10 LOOP
+
+        INSERT INTO course values(
+                                  ceil(DBMS_RANDOM.value(1, 10000)),
+                                  courses_names(ceil(DBMS_RANDOM.value(1, 12))),
+                                  ceil(DBMS_RANDOM.value(2, 4)),
+                                  students_ids(ceil(DBMS_RANDOM.value(0, 5)))
+                                 );
+    end loop;
+end;
+
+SELECT COUNT(*) AS MATERIAS, COURSE.STUDENTID
+FROM
+    COURSE JOIN STUDENT
+ON
+    COURSE.STUDENTID = STUDENT.STUDENTID
+GROUP BY
+    COURSE.STUDENTID;
+
+SELECT DISTINCT STUDENTID FROM COURSE;
+SELECT STUDENTID FROM STUDENT;
