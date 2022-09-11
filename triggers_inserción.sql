@@ -27,3 +27,4 @@ BEGIN
     :NEW.sc_acumulado := 0;
 END;
 /
+COMMIT;
