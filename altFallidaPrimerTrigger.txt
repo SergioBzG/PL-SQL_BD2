@@ -1,0 +1,33 @@
+CREATE TABLE auxSocioCoop(
+    idsocio NUMBER(8),
+    nombre VARCHAR2(30) NOT NULL,
+    s_acumulado NUMBER(11,3) CHECK(s_acumulado >= 0),
+    socio NUMBER(8) REFERENCES socio,
+    coope NUMBER(8) REFERENCES cooperativa,
+    PRIMARY KEY(socio, coope),
+    sc_acumulado NUMBER(11,3)
+);
+
+CREATE OR REPLACE TRIGGER actualizarCoop
+BEFORE UPDATE OF c_acumulado ON cooperativa
+FOR EACH ROW
+WHEN (NEW.c_acumulado > 0) --Solo se permiten incrementos positivos
+DECLARE
+    valor cooperativa.c_acumulado%TYPE;
+    TYPE sociosCoop IS TABLE OF auxSocioCoop%ROWTYPE;
+BEGIN
+    SELECT * BULK COLLECT INTO sociosCoop
+    FROM socio, coopexsocio
+    WHERE idsocio = socio AND coope = :OLD.codigo;
+    valor := :NEW.c_acumulado;
+    FORALL i IN sociosCoop.FIRST .. sociosCoop.LAST
+        UPDATE coopexsocio SET sc_acumulado = sc_acumulado + valor/sociosCoop.COUNT
+        WHERE coope = i.coope;
+        UPDATE socio SET s_acumulado = s_acumulado + valor/sociosCoop.COUNT
+        WHERE idsocio = i.idsocio;
+    EXCEPTION
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('EL error es ' || SQLERRM || ' y su código es: ' || sqlcode);
+END;
+/
+COMMIT;

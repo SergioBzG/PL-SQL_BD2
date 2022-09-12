@@ -2,7 +2,10 @@ CREATE OR REPLACE TRIGGER borrado_cooperativa
 BEFORE DELETE ON cooperativa
 FOR EACH ROW
 DECLARE
-    CURSOR c_coopxsocio(cooperativa_borrada NUMBER) IS SELECT socio, sc_acumulado FROM coopexsocio WHERE coope = cooperativa_borrada;
+    CURSOR c_coopxsocio(cooperativa_borrada NUMBER) IS
+    SELECT socio, sc_acumulado
+    FROM coopexsocio
+    WHERE coope = cooperativa_borrada;
     cooperativa_borrada cooperativa.codigo%TYPE;
 BEGIN
     cooperativa_borrada:= :OLD.codigo;
