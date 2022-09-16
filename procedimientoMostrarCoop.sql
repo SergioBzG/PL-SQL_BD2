@@ -37,8 +37,16 @@ BEGIN
     WHERE coope = codigoCoop;
     DBMS_OUTPUT.PUT_LINE('Total valores de los socios en la cooperativa: ' || totalAcum);
     EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('La cooperativa ingresada no existe');
         WHEN OTHERS THEN
             DBMS_OUTPUT.PUT_LINE('EL error es ' || SQLERRM || ' y su código es: ' || sqlcode);
 END;
 /
 COMMIT;
+
+begin
+    mostrarCoop(50);
+end;
+
+select * from COOPERATIVA ;

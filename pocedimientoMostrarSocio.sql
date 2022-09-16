@@ -11,8 +11,7 @@ IS
     arreglo_contiene socio_type;
     total_cooperativas cooperativa_type;
 BEGIN
-    SELECT nombre INTO nombre_socio FROM socio WHERE idsocio =  id_socio;
-    SELECT s_acumulado INTO acumulado FROM socio WHERE idsocio =  id_socio;
+    SELECT nombre, s_acumulado INTO nombre_socio, acumulado FROM socio WHERE idsocio =  id_socio;
     SELECT * BULK COLLECT INTO arreglo_contiene FROM coopexsocio WHERE socio = id_socio;
     SELECT * BULK COLLECT INTO total_cooperativas FROM cooperativa;
 
@@ -51,6 +50,15 @@ BEGIN
         END IF;
     END LOOP;
     DBMS_OUTPUT.PUT_LINE('}');
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            DBMS_OUTPUT.PUT_LINE('El socio ingresado no existe');
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('EL error es ' || SQLERRM || ' y su código es: ' || sqlcode);
 END;
 /
 COMMIT;
+
+begin
+    mostrarSocio(1);
+end;
