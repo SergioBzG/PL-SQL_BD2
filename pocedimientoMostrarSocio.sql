@@ -36,19 +36,25 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Cooperativas en las que no está el socio: ');
     DBMS_OUTPUT.PUT_LINE('{');
     contador := 1;
-    FOR i IN total_cooperativas.FIRST .. total_cooperativas.LAST LOOP
-        comparacion := 'false';
-        FOR J IN arreglo_contiene.FIRST .. arreglo_contiene.LAST LOOP
-            IF (total_cooperativas(i).codigo = arreglo_contiene(j).coope) THEN
-                comparacion := 'true';
-                EXIT;
+
+    IF total_cooperativas.FIRST IS NOT NULL THEN
+        FOR i IN total_cooperativas.FIRST .. total_cooperativas.LAST LOOP
+            comparacion := 'false';
+            IF arreglo_contiene.FIRST IS NOT NULL THEN
+                FOR J IN arreglo_contiene.FIRST .. arreglo_contiene.LAST LOOP
+                    IF (total_cooperativas(i).codigo = arreglo_contiene(j).coope) THEN
+                        comparacion := 'true';
+                        EXIT;
+                    END IF;
+                END LOOP;
+            END IF;
+            IF (comparacion = 'false') THEN
+                DBMS_OUTPUT.PUT_LINE(contador || '. ' || total_cooperativas(i).nombre);
+                contador := contador + 1;
             END IF;
         END LOOP;
-        IF (comparacion = 'false') THEN
-            DBMS_OUTPUT.PUT_LINE(contador || '. ' || total_cooperativas(i).nombre);
-            contador := contador + 1;
-        END IF;
-    END LOOP;
+    END IF;
+
     DBMS_OUTPUT.PUT_LINE('}');
     EXCEPTION
         WHEN NO_DATA_FOUND THEN
@@ -58,7 +64,3 @@ BEGIN
 END;
 /
 COMMIT;
-
-begin
-    mostrarSocio(1);
-end;
