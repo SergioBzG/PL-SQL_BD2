@@ -35,6 +35,9 @@ BEGIN
     SELECT SUM(sc_acumulado) INTO totalAcum
     FROM coopexsocio
     WHERE coope = codigoCoop;
+    IF totalAcum IS NULL THEN
+        totalAcum := 0;
+    END IF;
     DBMS_OUTPUT.PUT_LINE('Total valores de los socios en la cooperativa: ' || totalAcum);
     EXCEPTION
         WHEN NO_DATA_FOUND THEN
@@ -45,8 +48,3 @@ END;
 /
 COMMIT;
 
-begin
-    mostrarCoop(50);
-end;
-
-select * from COOPERATIVA ;
