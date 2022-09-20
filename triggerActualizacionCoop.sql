@@ -15,7 +15,7 @@ BEGIN
     WHERE coope = :OLD.codigo;
     --Se obtiene la cantidad de socios presentes en la cooperativa
     incremento := :NEW.c_acumulado - :OLD.c_acumulado;
-    iF incremento < :OLD.c_acumulado THEN
+    iF incremento < 0 THEN
         :NEW.c_acumulado := :OLD.c_acumulado;
         RAISE incrementoNegativo;
     END IF;
@@ -40,29 +40,6 @@ END;
 /
 COMMIT;
 
-DELETE FROM COOPEXSOCIO;
-DELETE FROM COOPERATIVA;
-DELETE FROM SOCIO;
 
-INSERT INTO cooperativa VALUES(1, 'Olimpo', 0);
-INSERT INTO cooperativa VALUES(2, 'Sombras', 0);
-INSERT INTO cooperativa VALUES(3, 'Casa', 0);
-INSERT INTO socio VALUES(1, 'Ramón', 0);
-INSERT INTO socio VALUES(2, 'Cassandra', 0);
-INSERT INTO socio VALUES(3, 'Helena', 0);
-INSERT INTO socio VALUES(4, 'Alejandro', 0);
-INSERT INTO socio VALUES(5, 'Hevel', 0);
-INSERT INTO coopexsocio VALUES(1, 1, 0);
-INSERT INTO coopexsocio VALUES(2, 1, 0);
-INSERT INTO coopexsocio VALUES(3, 1, 0);
-INSERT INTO coopexsocio VALUES(4, 1, 0);
-INSERT INTO coopexsocio VALUES(4, 2, 0);
-INSERT INTO coopexsocio VALUES(5, 2, 0);
-INSERT INTO coopexsocio VALUES(3, 2, 0);
 
-UPDATE cooperativa SET c_acumulado = 120 WHERE codigo = 1;
-UPDATE cooperativa SET c_acumulado = 100 WHERE codigo = 2;
-UPDATE cooperativa SET c_acumulado = 200 WHERE codigo = 2;
-UPDATE cooperativa SET c_acumulado = 100 WHERE codigo = 3;
-UPDATE cooperativa SET NOMBRE = 'Parnaso' WHERE codigo = 1;
-SELECT * FROM COOPERATIVA;
+

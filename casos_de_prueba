@@ -1,0 +1,29 @@
+DELETE FROM COOPEXSOCIO;
+DELETE FROM COOPERATIVA;
+DELETE FROM SOCIO;
+
+INSERT INTO cooperativa VALUES(1, 'Olimpo', 0);
+INSERT INTO cooperativa VALUES(2, 'Sombras', 0);
+INSERT INTO cooperativa VALUES(3, 'Casa', 0);
+INSERT INTO cooperativa VALUES(4, 'Cóndores', 234);
+INSERT INTO socio VALUES(1, 'Ramón', 0);
+INSERT INTO socio VALUES(2, 'Cassandra', 0);
+INSERT INTO socio VALUES(3, 'Helena', 0);
+INSERT INTO socio VALUES(4, 'Alejandro', 0);
+INSERT INTO socio VALUES(5, 'Hevel', 0);
+INSERT INTO coopexsocio VALUES(1, 1, 0);
+INSERT INTO coopexsocio VALUES(2, 1, 0);
+INSERT INTO coopexsocio VALUES(3, 1, 0);
+INSERT INTO coopexsocio VALUES(4, 1, 0);
+INSERT INTO coopexsocio VALUES(4, 2, 0);
+INSERT INTO coopexsocio VALUES(5, 2, 0);
+INSERT INTO coopexsocio VALUES(3, 2, 0);
+
+UPDATE cooperativa SET c_acumulado = 120 WHERE codigo = 1;
+UPDATE cooperativa SET c_acumulado = 100 WHERE codigo = 2;
+UPDATE cooperativa SET c_acumulado = 23 WHERE codigo = 2;
+UPDATE cooperativa SET c_acumulado = 40 WHERE codigo = 3;
+
+SELECT * FROM COOPERATIVA;
+SELECT * FROM COOPEXSOCIO;
+SELECT * FROM SOCIO;
